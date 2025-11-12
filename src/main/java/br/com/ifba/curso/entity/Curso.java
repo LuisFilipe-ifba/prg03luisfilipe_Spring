@@ -4,18 +4,19 @@
  */
 package br.com.ifba.curso.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 /**
  *
  * @author PC
  */
 @Entity
-public class Curso{
+public class Curso extends PersistenceEntity implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,15 +28,16 @@ public class Curso{
     
     //metodos
 
-    public Curso(long id, String nome, String codigoCurso) {
-        this.id = id;
+    public Curso(String nome, String codigoCurso) {
         this.nome = nome;
         this.codigoCurso = codigoCurso;
         this.ativo = true;
     }
-
     
-    
+    public Curso(){
+        
+    }
+    @Override
     public long getId() {
         return id;
     }
@@ -52,6 +54,7 @@ public class Curso{
         return ativo;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
