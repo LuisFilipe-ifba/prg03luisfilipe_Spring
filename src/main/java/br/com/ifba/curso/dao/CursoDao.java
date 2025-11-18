@@ -34,5 +34,23 @@ public class CursoDao extends GenericDao<Curso> implements CursoIDao{
     }
     }
     
-    
+    /**
+     *
+     * @param nome
+     * @return
+     */
+    @Override
+    public Curso encontrarNome(String nome) {
+         try {
+        String jpql = "SELECT c FROM Curso c WHERE c.nome = :nome";
+
+            Curso curso = entityManager.createQuery(jpql, Curso.class)
+                    .setParameter("nome", nome) // Define o valor do parâmetro :codigo
+                    .getSingleResult(); // Espera UM resultado
+            return curso;
+    } catch (NoResultException e) {
+        // Se o curso não for encontrado, retorna null.
+        return null;
+    }
+    }
 }

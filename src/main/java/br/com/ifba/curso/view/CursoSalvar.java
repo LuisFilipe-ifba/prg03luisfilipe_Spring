@@ -6,6 +6,7 @@ package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.dao.CursoDao;
+import br.com.ifba.curso.service.CursoService;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 /**
@@ -96,12 +97,16 @@ public class CursoSalvar extends javax.swing.JFrame {
             Curso curso = new Curso(nome, codigo);
         
             CursoDao c = new CursoDao();
-            c.save(curso);
+            
+            CursoService cs = new CursoService(c);
+            
+            cs.saveCurso(curso);
+            //c.save(curso);
             
             JOptionPane.showMessageDialog(null, "Curso salvo com sucesso!!",
                     "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             
-        }catch(HeadlessException e){
+        }catch(RuntimeException e){
             JOptionPane.showMessageDialog(null, "ERRO ao salvar curso" + e.getMessage(),
                     "ERRO", JOptionPane.ERROR_MESSAGE);
         }

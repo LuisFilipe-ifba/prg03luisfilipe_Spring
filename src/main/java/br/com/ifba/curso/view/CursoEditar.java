@@ -18,10 +18,13 @@ public class CursoEditar extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CursoEditar.class.getName());
 
-    private Curso cursoParaEditar;
+    private final Curso cursoParaEditar;
 
     /**
      * Creates new form CursoEditar
+     * @param parent
+     * @param modal
+     * @param curso
      */
     public CursoEditar(java.awt.Frame parent, boolean modal, Curso curso) {
         super(parent, modal); // Chama o construtor do JDialog
@@ -125,8 +128,18 @@ public class CursoEditar extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE);
             return; // Para a execução
         }
+        String novoCodigo = txtCodigoedit.getText().trim();
+        
+        if (novoCodigo.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "O código do curso não pode ficar em branco.",
+                    "Erro de Validação",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+}   
         // 3. Atualiza o objeto 'cursoParaEditar' que está na memória
         this.cursoParaEditar.setNome(novoNome);
+        this.cursoParaEditar.setCodigoCurso(novoCodigo);
         // (Não precisamos mexer no código, pois ele não mudou)
 
         // 4. Tenta salvar a atualização no banco de dados
@@ -165,7 +178,7 @@ public class CursoEditar extends javax.swing.JDialog {
         if (this.cursoParaEditar != null) {
             txtNomeedit.setText(this.cursoParaEditar.getNome());
             txtCodigoedit.setText(this.cursoParaEditar.getCodigoCurso());
-            txtCodigoedit.setEnabled(false);
+            txtCodigoedit.setEnabled(true);
         }
     }
 

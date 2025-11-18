@@ -13,6 +13,7 @@ import br.com.ifba.infrastructure.dao.GenericIDao;
  */
 public interface CursoIDao extends GenericIDao<Curso>{
     
-    public Curso encontrarCodigo(String nome);
+    public Curso encontrarCodigo(String codigo);
     
+    public Curso encontrarNome(String nome);
 }

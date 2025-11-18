@@ -29,27 +29,28 @@ public class GenericDao<Entity extends PersistenceEntity> implements GenericIDao
     }
     
     @Override
-    public Entity save(Entity save) {
+    public Entity save(Entity entity) {
+        
         entityManager.getTransaction().begin();
-        entityManager.persist(save);
+        entityManager.persist(entity);
         entityManager.getTransaction().commit();
         
-        return save;
+        return entity;
     }
 
     @Override
-    public Entity update(Entity upd) {
+    public Entity update(Entity entity) {
         entityManager.getTransaction().begin();
-        entityManager.merge(upd);
+        entityManager.merge(entity);
         entityManager.getTransaction().commit();
-        return upd;
+        return entity;
     }
 
     @Override
-    public void delete(Entity del) {
-        del = findId(del.getId());
+    public void delete(Entity entity) {
+        entity = findId(entity.getId());
         entityManager.getTransaction().begin();
-        entityManager.remove(del);
+        entityManager.remove(entity);
         entityManager.getTransaction().commit();
 
     }

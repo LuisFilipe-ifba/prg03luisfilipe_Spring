@@ -7,6 +7,8 @@ package br.com.ifba.curso.view;
 import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
+import br.com.ifba.curso.service.CursoIService;
+import br.com.ifba.curso.service.CursoService;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 
@@ -131,10 +133,11 @@ public class CursoAdicionar extends javax.swing.JDialog {
         try {
             // 3. Cria uma instância do nosso DAO (o "garçom" que fala com o banco).
             CursoIDao cursoDAO = new CursoDao();
-
+            CursoIService cursoService = new CursoService(cursoDAO);
             // 4. "Entrega" o objeto 'curso' (preenchido) para o método 'salvar' do DAO.
             //    O DAO fará todo o trabalho de 'persist' e 'commit'.
-            cursoDAO.save(curso);
+            cursoService.saveCurso(curso);
+            //cursoDAO.save(curso);
 
             // --- ETAPA 3: RESPOSTA DE SUCESSO ---
             // 5. Se a linha 'cursoDAO.salvar(curso)' NÃO deu erro (não lançou exceção),
@@ -149,7 +152,7 @@ public class CursoAdicionar extends javax.swing.JDialog {
             //    e permite que ela execute o "refresh" (o 'preencherTabela()').
             this.dispose();
 
-        } catch (HeadlessException e) {
+        } catch (RuntimeException e) {
             // --- ETAPA 4: RESPOSTA DE FALHA ---
 
             // 7. Se o 'cursoDAO.salvar()' lançou uma exceção ('throw e'),
