@@ -4,8 +4,8 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
 import java.util.List; // Usado para receber a lista de cursos do banco.
 import javax.swing.JOptionPane;
@@ -205,14 +205,14 @@ public class CursoListar extends javax.swing.JFrame {
         btnEditar.setEnabled(false);
         btnExcluir.setEnabled(false);
 
-        // 3. Cria uma instância do nosso DAO (a classe que "fala" com o banco).
-        CursoIDao cursoDao = new CursoDao();
+        // 3. Cria uma instância do nosso Controller (a classe que "fala" com o banco).
+        CursoIController controle = new CursoController();
 
-        // 4. Chama o método do DAO que vai ao banco e retorna a lista de Cursos.
-        List<Curso> cursos = cursoDao.listAll();
+        // 4. Chama o método do Controller que vai ao banco e retorna a lista de Cursos.
+        List<Curso> cursos = controle.listAll();
 
         // 5. Boa prática: Verifica se a lista não veio nula 
-        //    (o que pode acontecer se o DAO der erro e retornar 'null').
+        //    (o que pode acontecer se o Controller der erro e retornar 'null').
         if (cursos != null) {
             // 6. Itera (passa por) cada objeto 'curso' dentro da lista 'cursos'.
             for (Curso curso : cursos) {
@@ -264,10 +264,10 @@ public class CursoListar extends javax.swing.JFrame {
 
         // 4. Pega o CÓDIGO (que é a Chave Primária) da coluna 1 do modelo.
         String codigoCurso = (String) tblCurso.getModel().getValueAt(modelRow, 1);
+        // 5. USA Controller para buscar o objeto 'Curso' COMPLETO no banco
 
-        // 5. USA O DAO para buscar o objeto 'Curso' COMPLETO no banco
-        CursoIDao cursoDAO = new CursoDao();
-        Curso cursoParaEditar = cursoDAO.encontrarCodigo(codigoCurso);
+        CursoController controle = new CursoController();
+        Curso cursoParaEditar = controle.encontrarCodigo(codigoCurso);
 
         // 6. Verifica se o curso foi encontrado
         if (cursoParaEditar != null) {
@@ -322,15 +322,15 @@ public class CursoListar extends javax.swing.JFrame {
 
         // 6. Verifica se o usuário clicou em "SIM" (YES_OPTION)
         if (confirm == JOptionPane.YES_OPTION) {
-
-            CursoIDao cursoDAO = new CursoDao();
+            
+            CursoController controle = new CursoController();
             try {
                 // 7. Busca o objeto 'Curso' COMPLETO usando o código
-                Curso cursoParaExcluir = cursoDAO.encontrarCodigo(codigoCurso);
+                Curso cursoParaExcluir = controle.encontrarCodigo(codigoCurso);
 
                 if (cursoParaExcluir != null) {
-                    // 8. Chama o método de excluir do DAO
-                    cursoDAO.delete(cursoParaExcluir);
+                    // 8. Chama o método de excluir do Controller
+                    controle.delete(cursoParaExcluir);
 
                     // 9. Mostra mensagem de sucesso
                     JOptionPane.showMessageDialog(this, "Curso excluído com sucesso!");
@@ -344,7 +344,7 @@ public class CursoListar extends javax.swing.JFrame {
                 }
 
             } catch (Exception e) {
-                // 11. Mostra uma mensagem de erro se o DAO falhar
+                // 11. Mostra uma mensagem de erro se o Controller falhar
                 JOptionPane.showMessageDialog(this,
                         "Falha ao excluir o curso: " + e.getMessage(),
                         "Erro de Banco de Dados",

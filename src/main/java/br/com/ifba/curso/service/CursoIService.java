@@ -21,11 +21,10 @@ public interface CursoIService {
 
     public abstract List<Curso> listAllCurso();
 
-    /**
-     *
-     * @param id
-     * @return
-     */
     public abstract Curso findIdCurso(Long id);
+    
+    public Curso encontrarCodigo(String codigo);
+    
+    public Curso encontrarNome(String nome);
     
 }

@@ -88,5 +88,20 @@ public class CursoService implements CursoIService {
     public Curso findIdCurso(Long id) {
         return cursoDao.findId(id);
     }
+
+    @Override
+    public Curso encontrarCodigo(String codigo) {
+        if(!StringUtill.stringVazia(codigo)){
+            throw new RuntimeException("Codigo invalido");
+        }
+        return cursoDao.encontrarCodigo(codigo);
+    }
+
+    @Override
+    public Curso encontrarNome(String nome) {
+        if(!StringUtill.stringVazia(nome)){
+            throw new RuntimeException("Nome invalido");
+        }
+        return cursoDao.encontrarNome(nome);    }
     
 }

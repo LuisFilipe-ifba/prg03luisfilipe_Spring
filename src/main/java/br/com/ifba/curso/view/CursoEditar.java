@@ -4,10 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
-import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 
 /**
@@ -144,11 +143,12 @@ public class CursoEditar extends javax.swing.JDialog {
 
         // 4. Tenta salvar a atualização no banco de dados
         try {
-            // 5. Cria o DAO
-            CursoIDao cursoDAO = new CursoDao();
+            // 5. Cria o Controller
+            CursoIController controle = new CursoController();
 
             // 6. Chama o novo método ATUALIZAR
-            cursoDAO.update(this.cursoParaEditar);
+            controle.update(this.cursoParaEditar);
+            
 
             // 7. Se deu certo, mostra mensagem de sucesso
             JOptionPane.showMessageDialog(this,
@@ -161,8 +161,8 @@ public class CursoEditar extends javax.swing.JDialog {
             //    e atualizar a tabela.
             this.dispose();
 
-        } catch (HeadlessException e) {
-            // 9. Se o DAO deu erro (ex: nome duplicado, erro de banco)
+        } catch (RuntimeException e) {
+            // 9. Se o Controller deu erro (ex: nome duplicado, erro de banco)
             JOptionPane.showMessageDialog(this,
                     "Falha ao atualizar o curso: " + e.getMessage(),
                     "Erro de Banco de Dados",
