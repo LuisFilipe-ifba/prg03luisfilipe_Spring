@@ -4,14 +4,21 @@
  */
 package br.com.ifba.curso;
 
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.view.CursoListar;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author PC
  */
-public class CursoSave {
-
+@Component
+public class CursoSave{
+    
+    @Autowired
+    private CursoIController controller;
+    
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
         new CursoListar().setVisible(true);

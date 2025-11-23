@@ -16,12 +16,16 @@ import javax.swing.event.DocumentListener; // "Ouvinte" que monitora mudanças e
 import javax.swing.event.DocumentEvent; // O "evento" que o DocumentListener escuta (ex: digitação).
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author dudan
  */
+@Component
 public class CursoListar extends javax.swing.JFrame {
+
+    
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CursoListar.class.getName());
 
@@ -31,7 +35,7 @@ public class CursoListar extends javax.swing.JFrame {
      * para que todos os métodos (como 'filtrar()' e o construtor) possam
      * acessá-la.
      */
-    private TableRowSorter<DefaultTableModel> sorter;
+    private final TableRowSorter<DefaultTableModel> sorter;
 
     /**
      * Construtor da classe. É executado UMA VEZ quando a tela é criada.

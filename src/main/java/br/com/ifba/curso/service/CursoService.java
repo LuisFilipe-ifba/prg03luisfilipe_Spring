@@ -8,13 +8,16 @@ import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.infrastructure.util.StringUtill;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author PC
  */
+@Service
 public class CursoService implements CursoIService {
-    
+    @Autowired
     private final CursoIDao cursoDao;
     
     public CursoService(CursoIDao cursoDao){// metodo construtor da classe
