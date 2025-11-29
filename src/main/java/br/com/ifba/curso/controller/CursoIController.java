@@ -6,6 +6,7 @@ package br.com.ifba.curso.controller;
 
 import br.com.ifba.curso.entity.Curso;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -21,10 +22,10 @@ public interface CursoIController {
 
     public abstract List<Curso> listAll();
 
-    public abstract Curso findId(Long id);
+    public abstract Optional<Curso> findId(Long id);
     
-    public Curso encontrarCodigo(String codigo);
+    public abstract Optional<Curso> encontrarCodigo(String codigo);
     
-    public Curso encontrarNome(String nome);
+    public abstract Optional<Curso> encontrarNome(String nome);
     
 }

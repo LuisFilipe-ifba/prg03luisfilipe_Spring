@@ -4,10 +4,11 @@
  */
 package br.com.ifba.curso.service;
 
-import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.curso.repository.CursoRepository;
 import br.com.ifba.infrastructure.util.StringUtill;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,65 +18,75 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CursoService implements CursoIService {
-    @Autowired
-    private final CursoIDao cursoDao;
     
-    public CursoService(CursoIDao cursoDao){// metodo construtor da classe
-        this.cursoDao = cursoDao;
-    };
+    @Autowired
+    private final CursoRepository cursoRepository;
+    
+    @Autowired
+    public CursoService(CursoRepository cursoRepository) {
+        this.cursoRepository = cursoRepository;
+    }
     
     @Override
-    public Curso saveCurso(Curso save) {
-        //verifica se nomeou codigo esta vazio 
-        if(!StringUtill.stringVazia(save.getNome()) && !StringUtill.stringVazia(save.getCodigoCurso())){
-            
-            //Verifica se ja existe um nome igual
-            Curso cursoExistente = cursoDao.encontrarNome(save.getNome());
-            if (cursoExistente != null && cursoExistente.getId() != save.getId()) {
-                throw new RuntimeException("Já existe outro curso com esse nome!");
-            }
-            //Verifica se ja existe um codigo igual
-            cursoExistente = cursoDao.encontrarCodigo(save.getCodigoCurso());
-            if (cursoExistente != null && cursoExistente.getId() != save.getId()) {
-                throw new RuntimeException("Já existe outro curso com esse codigo!");
-            }
-            
-            return cursoDao.save(save);
-        }else{
-            throw new RuntimeException("Nome ou Codigo invalido");
-        }
+    public Curso save(Curso save) {
+
+    // Verifica nome ou código vazios
+    if (StringUtill.stringIsEmpty(save.getNome()) ||
+    StringUtill.stringIsEmpty(save.getCodigoCurso())) {
+    throw new RuntimeException("Nome e código não podem estar vazios!");
     }
 
+    // Verifica nome duplicado
+    cursoRepository.findByNome(save.getNome()).ifPresent(existing -> {
+    throw new RuntimeException("Já existe outro curso com esse nome!");
+});
+
+    // Verifica código duplicado
+    cursoRepository.findByCodigoCurso(save.getCodigoCurso()).ifPresent(existing -> {
+        if (!existing.getId().equals(save.getId())) {
+            throw new RuntimeException("Já existe outro curso com esse código!");
+        }
+    });
+
+    // Salva
+    return cursoRepository.save(save);
+}
+
     @Override
-    public Curso updateCurso(Curso upd) {
+    public Curso update(Curso upd) {
         //Verifica se nome ou codigo estão vazios
-        if (StringUtill.stringVazia(upd.getNome()) || StringUtill.stringVazia(upd.getCodigoCurso())) {
-            throw new RuntimeException("Nome e código não podem estar vazios!");
+        if (StringUtill.stringIsEmpty(upd.getNome()) ||
+        StringUtill.stringIsEmpty(upd.getCodigoCurso())) {
+        throw new RuntimeException("Nome e código não podem estar vazios!");
         }
         
         //verifica se Curso existe
-        Curso cursoExistente = cursoDao.findId(upd.getId());
-        if(cursoExistente == null){
-            throw new RuntimeException("Curso não encontrado para atualização");
-        }
+       
+        cursoRepository.findById(upd.getId())
+            .orElseThrow(() -> new RuntimeException("Curso não encontrado para atualização"));
         
-        //Verifica se ja existe um nome igual
-        cursoExistente = cursoDao.encontrarNome(upd.getNome());
-            if (cursoExistente != null && cursoExistente.getId() != upd.getId()) {
-                throw new RuntimeException("Já existe outro curso com esse nome!");
-            }
-        //Verifica se ja existe um codigo igual
-        cursoExistente = cursoDao.encontrarCodigo(upd.getCodigoCurso());
-            if (cursoExistente != null && cursoExistente.getId() != upd.getId()) {
-                throw new RuntimeException("Já existe outro curso com esse codigo!");
-            }
-        return cursoDao.update(upd);
+        // Verifica nome duplicado
+        cursoRepository.findByNome(upd.getNome()).ifPresent(existing -> {
+        if (!existing.getId().equals(upd.getId())) {
+            throw new RuntimeException("Já existe outro curso com esse nome!");
+        }
+        });
+        // Verifica código duplicado
+        cursoRepository.findByCodigoCurso(upd.getCodigoCurso()).ifPresent(existing -> {
+        if (!existing.getId().equals(upd.getId())) {
+            throw new RuntimeException("Já existe outro curso com esse código!");
+        }
+        });
+        return cursoRepository.save(upd);
     }
 
     //operações mais basicas abaixo sem muitas adições
     @Override
-    public void deleteCurso(Curso del) {
-        cursoDao.delete(del);
+    public void delete(Curso del) {
+        if (!cursoRepository.findById(del.getId()).isPresent()) {
+        throw new RuntimeException("Curso não encontrado para exclusão");
+        }
+        cursoRepository.deleteById(del.getId());
     }
 
     /**
@@ -83,28 +94,34 @@ public class CursoService implements CursoIService {
      * @return
      */
     @Override
-    public List<Curso> listAllCurso() {
-        return cursoDao.listAll();
+    public List<Curso> listAll() {
+        return cursoRepository.findAll();
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Optional<Curso> findById(Long id) {
+        return cursoRepository.findById(id);
     }
 
     @Override
-    public Curso findIdCurso(Long id) {
-        return cursoDao.findId(id);
-    }
-
-    @Override
-    public Curso encontrarCodigo(String codigo) {
-        if(!StringUtill.stringVazia(codigo)){
+    public Optional<Curso> findByCodigo(String codigo) {
+        if(StringUtill.stringIsEmpty(codigo)){
             throw new RuntimeException("Codigo invalido");
         }
-        return cursoDao.encontrarCodigo(codigo);
+        return cursoRepository.findByCodigoCurso(codigo);
     }
 
     @Override
-    public Curso encontrarNome(String nome) {
-        if(!StringUtill.stringVazia(nome)){
+    public Optional<Curso> findByNome(String nome) {
+        if(StringUtill.stringIsEmpty(nome)){
             throw new RuntimeException("Nome invalido");
         }
-        return cursoDao.encontrarNome(nome);    }
-    
+        return cursoRepository.findByNome(nome);
+    }
 }
+

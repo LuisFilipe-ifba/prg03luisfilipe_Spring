@@ -4,11 +4,11 @@
  */
 package br.com.ifba.curso.controller;
 
-import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.service.CursoIService;
 import br.com.ifba.curso.service.CursoService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -19,51 +19,46 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CursoController implements CursoIController {
     
+    private final  CursoIService service;
+    
     @Autowired
-    private final CursoIService service;
-    
-    public CursoController(){
-        this.service = new CursoService(new CursoDao());
-    }
-    
     public CursoController(CursoService service){
-        this.service = service;
-        
+    this.service = service;
     }
 
     @Override
     public Curso save(Curso save) {
-        return this.service.saveCurso(save);
+        return this.service.save(save);
     }
 
     @Override
     public Curso update(Curso upd) {
-        return this.service.updateCurso(upd);
+        return this.service.update(upd);
     }
 
     @Override
     public void delete(Curso del) {
-        this.service.deleteCurso(del);
+        this.service.delete(del);
     }
 
     @Override
     public List<Curso> listAll() {
-        return this.service.listAllCurso();
+        return this.service.listAll();
     }
 
     @Override
-    public Curso findId(Long id) {
-        return this.service.findIdCurso(id);
+    public Optional<Curso> findId(Long id) {
+        return this.service.findById(id);
     }
 
     @Override
-    public Curso encontrarCodigo(String codigo) {
-        return service.encontrarCodigo(codigo);
+    public Optional<Curso> encontrarCodigo(String codigo) {
+        return service.findByCodigo(codigo);
     }
 
     @Override
-    public Curso encontrarNome(String nome) {
-        return service.encontrarNome(nome);
+    public Optional<Curso> encontrarNome(String nome) {
+        return service.findByNome(nome);
     }
     
 }

@@ -20,7 +20,7 @@ public class Curso extends PersistenceEntity implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     
     private String nome;
     private String codigoCurso;
@@ -37,8 +37,9 @@ public class Curso extends PersistenceEntity implements Serializable{
     public Curso(){
         
     }
+
     @Override
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -55,7 +56,7 @@ public class Curso extends PersistenceEntity implements Serializable{
     }
 
     @Override
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

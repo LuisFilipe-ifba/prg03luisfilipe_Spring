@@ -6,6 +6,7 @@ package br.com.ifba.curso.service;
 
 import br.com.ifba.curso.entity.Curso;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -13,18 +14,18 @@ import java.util.List;
  */
 public interface CursoIService {
     
-    public Curso saveCurso(Curso save);
+    public Curso save(Curso save);
     
-    public abstract Curso updateCurso(Curso upd);
+    public abstract Curso update(Curso upd);
 
-    public abstract void deleteCurso(Curso del);
+    public abstract void delete(Curso del);
 
-    public abstract List<Curso> listAllCurso();
+    public abstract List<Curso> listAll();
 
-    public abstract Curso findIdCurso(Long id);
+    public abstract Optional<Curso> findById(Long id);
     
-    public Curso encontrarCodigo(String codigo);
+    public Optional<Curso> findByNome(String nome);
     
-    public Curso encontrarNome(String nome);
-    
+    public Optional<Curso> findByCodigo(String codigo);
+            
 }

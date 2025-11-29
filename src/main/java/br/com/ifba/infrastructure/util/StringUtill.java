@@ -18,7 +18,7 @@ public class StringUtill {
      * @return
      */
     
-    public static boolean stringVazia(String linha){
+    public static boolean stringIsEmpty(String linha){
         return linha == null || linha.trim().isEmpty();
     }
     

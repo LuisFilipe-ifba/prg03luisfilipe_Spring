@@ -5,7 +5,6 @@
 package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoController;
-import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
 import javax.swing.JOptionPane;
 
@@ -22,10 +21,13 @@ public class CursoAdicionar extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public CursoAdicionar(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-    }
+    private final CursoController controller;
+
+    public CursoAdicionar(java.awt.Frame parent, boolean modal, CursoController controller) {
+    super(parent, modal);
+    this.controller = controller;
+    initComponents();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -128,16 +130,10 @@ public class CursoAdicionar extends javax.swing.JDialog {
         // Usamos um bloco 'try...catch' porque operações de banco de dados
         // são "arriscadas" e podem falhar (ex: banco offline, código duplicado).
         try {
-            // 3. Cria uma instância do nosso DAO (o "garçom" que fala com o banco).
-            //CursoIDao cursoDAO = new CursoDao();
-            //CursoIService cursoService = new CursoService(cursoDAO);
-            CursoIController controle = new CursoController();
-            // 4. "Entrega" o objeto 'curso' (preenchido) para o método 'salvar' do DAO.
-            //    O DAO fará todo o trabalho de 'persist' e 'commit'.
-            controle.save(curso);
-            //cursoService.saveCurso(curso);
-            //cursoDAO.save(curso);
-
+            //usa o controller recebido de CursoListar
+            controller.save(curso);
+            JOptionPane.showMessageDialog(this, "Curso criado com sucesso!");
+            this.dispose();
             // --- ETAPA 3: RESPOSTA DE SUCESSO ---
             // 5. Se a linha 'cursoDAO.salvar(curso)' NÃO deu erro (não lançou exceção),
             //    significa que o salvamento foi um sucesso.
@@ -166,36 +162,7 @@ public class CursoAdicionar extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            CursoAdicionar dialog = new CursoAdicionar(new javax.swing.JFrame(), true);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setVisible(true);
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCriar;

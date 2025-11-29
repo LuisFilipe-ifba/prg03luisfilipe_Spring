@@ -7,6 +7,7 @@ package br.com.ifba.curso.view;
 import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
+import java.util.Optional;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +19,7 @@ public class CursoEditar extends javax.swing.JDialog {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CursoEditar.class.getName());
 
     private final Curso cursoParaEditar;
+    private final CursoController controller;
 
     /**
      * Creates new form CursoEditar
@@ -25,12 +27,13 @@ public class CursoEditar extends javax.swing.JDialog {
      * @param modal
      * @param curso
      */
-    public CursoEditar(java.awt.Frame parent, boolean modal, Curso curso) {
+    public CursoEditar(java.awt.Frame parent, boolean modal, Curso curso, CursoController controller) {
         super(parent, modal); // Chama o construtor do JDialog
         initComponents();
 
         // 1. Salva o objeto 'curso' que recebemos como PARÂMETRO
         this.cursoParaEditar = curso;
+        this.controller = controller;
 
         // 2. Preenche os campos da tela
         preencherCampos();
@@ -143,11 +146,9 @@ public class CursoEditar extends javax.swing.JDialog {
 
         // 4. Tenta salvar a atualização no banco de dados
         try {
-            // 5. Cria o Controller
-            CursoIController controle = new CursoController();
 
             // 6. Chama o novo método ATUALIZAR
-            controle.update(this.cursoParaEditar);
+            controller.update(this.cursoParaEditar);
             
 
             // 7. Se deu certo, mostra mensagem de sucesso
@@ -185,25 +186,9 @@ public class CursoEditar extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
+    /*
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
+        
         java.awt.EventQueue.invokeLater(() -> {
             // Cria um "pai" e um "curso" falsos só para o 'main' funcionar
             Curso cursoFalso = new Curso("nada", "nada");
@@ -219,7 +204,7 @@ public class CursoEditar extends javax.swing.JDialog {
             });
             dialog.setVisible(true);
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditarcurso;

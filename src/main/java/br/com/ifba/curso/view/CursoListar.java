@@ -7,6 +7,7 @@ package br.com.ifba.curso.view;
 import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
+import java.awt.HeadlessException;
 import java.util.List; // Usado para receber a lista de cursos do banco.
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel; // Classe que gerencia os dados (linhas/colunas) da JTable.
@@ -36,16 +37,17 @@ public class CursoListar extends javax.swing.JFrame {
      * acessá-la.
      */
     private final TableRowSorter<DefaultTableModel> sorter;
-
+    private final CursoController controller;
     /**
      * Construtor da classe. É executado UMA VEZ quando a tela é criada.
      * Perfeito para configurações iniciais.
+     * @param controller
      */
-    public CursoListar() {
+    public CursoListar(CursoController controller) {
         // Método auto-gerado pelo NetBeans para criar e posicionar
         // os componentes visuais (botões, tabela, etc.) que você desenhou.
+         this.controller = controller;
         initComponents();
-
         // --- Bloco de Configuração do Filtro da Tabela ---
         // 1. Pega o "modelo" da tabela. O modelo é quem realmente guarda e 
         //    gerencia os dados (as linhas e colunas) da JTable.
@@ -210,7 +212,7 @@ public class CursoListar extends javax.swing.JFrame {
         btnExcluir.setEnabled(false);
 
         // 3. Cria uma instância do nosso Controller (a classe que "fala" com o banco).
-        CursoIController controle = new CursoController();
+        CursoController controle = this.controller;
 
         // 4. Chama o método do Controller que vai ao banco e retorna a lista de Cursos.
         List<Curso> cursos = controle.listAll();
@@ -237,12 +239,13 @@ public class CursoListar extends javax.swing.JFrame {
         //    Passamos 'this' (a tela CursoListar) como "pai"
         //    Passamos 'true' para dizer que ela é "MODAL" (ela trava a tela 'mãe'
         //    enquanto estiver aberta).
-        CursoAdicionar telaAdicionar = new CursoAdicionar(this, true);
+        CursoAdicionar telaAdd = new CursoAdicionar(this, true, this.controller);
+        
 
         // 2. Mostra a tela de adicionar. 
         //    IMPORTANTE: Como ela é 'modal', o CÓDIGO AQUI PAUSA 
         //    e só continua quando a 'telaAdicionar' for fechada.
-        telaAdicionar.setVisible(true);
+        telaAdd.setVisible(true);
 
         // 3. PONTO-CHAVE: Este é o nosso "refresh"!
         //    Este código só é executado DEPOIS que o usuário fechou a 
@@ -269,9 +272,7 @@ public class CursoListar extends javax.swing.JFrame {
         // 4. Pega o CÓDIGO (que é a Chave Primária) da coluna 1 do modelo.
         String codigoCurso = (String) tblCurso.getModel().getValueAt(modelRow, 1);
         // 5. USA Controller para buscar o objeto 'Curso' COMPLETO no banco
-
-        CursoController controle = new CursoController();
-        Curso cursoParaEditar = controle.encontrarCodigo(codigoCurso);
+        Curso cursoParaEditar = controller.encontrarCodigo(codigoCurso).orElse(null);
 
         // 6. Verifica se o curso foi encontrado
         if (cursoParaEditar != null) {
@@ -279,7 +280,7 @@ public class CursoListar extends javax.swing.JFrame {
             // 7. Cria a tela de Edição.
             //    (ASSUMINDO QUE VOCÊ VAI MUDAR CursoEditar para ser um JDialog,
             //    assim como o CursoAdicionar)
-            CursoEditar telaEditar = new CursoEditar(this, true, cursoParaEditar);
+            CursoEditar telaEditar = new CursoEditar(this, true, cursoParaEditar, controller);
 
             // 8. Mostra a tela de edição. O código PAUSA AQUI.
             telaEditar.setVisible(true);
@@ -327,10 +328,10 @@ public class CursoListar extends javax.swing.JFrame {
         // 6. Verifica se o usuário clicou em "SIM" (YES_OPTION)
         if (confirm == JOptionPane.YES_OPTION) {
             
-            CursoController controle = new CursoController();
+            CursoController controle = this.controller;
             try {
                 // 7. Busca o objeto 'Curso' COMPLETO usando o código
-                Curso cursoParaExcluir = controle.encontrarCodigo(codigoCurso);
+                Curso cursoParaExcluir = controle.encontrarCodigo(codigoCurso).orElseThrow(null);
 
                 if (cursoParaExcluir != null) {
                     // 8. Chama o método de excluir do Controller
@@ -347,7 +348,7 @@ public class CursoListar extends javax.swing.JFrame {
                             "Erro", JOptionPane.ERROR_MESSAGE);
                 }
 
-            } catch (Exception e) {
+            } catch (HeadlessException e) {
                 // 11. Mostra uma mensagem de erro se o Controller falhar
                 JOptionPane.showMessageDialog(this,
                         "Falha ao excluir o curso: " + e.getMessage(),
@@ -438,7 +439,7 @@ public class CursoListar extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new CursoListar().setVisible(true));
+        
     }
 
 
