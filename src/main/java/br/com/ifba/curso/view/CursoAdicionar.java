@@ -113,7 +113,7 @@ public class CursoAdicionar extends javax.swing.JDialog {
 
         // --- ETAPA 1: COLETAR DADOS DA TELA ---
         // Cria um objeto "Curso" (Entidade) em branco, na memória.
-        Curso curso = new Curso("nada", "nada");
+        Curso curso = new Curso();
 
         // Pega o texto que o usuário digitou no campo 'txtNome' 
         // e o armazena no objeto 'curso'.

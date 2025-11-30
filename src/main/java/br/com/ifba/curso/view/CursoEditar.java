@@ -5,9 +5,7 @@
 package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoController;
-import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso; // Importa a Entidade (o "molde" dos dados).
-import java.util.Optional;
 import javax.swing.JOptionPane;
 
 /**

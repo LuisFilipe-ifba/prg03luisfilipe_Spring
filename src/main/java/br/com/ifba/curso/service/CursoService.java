@@ -9,7 +9,9 @@ import br.com.ifba.curso.repository.CursoRepository;
 import br.com.ifba.infrastructure.util.StringUtill;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,19 +19,16 @@ import org.springframework.stereotype.Service;
  * @author PC
  */
 @Service
+@RequiredArgsConstructor
 public class CursoService implements CursoIService {
     
-    @Autowired
     private final CursoRepository cursoRepository;
     
-    @Autowired
-    public CursoService(CursoRepository cursoRepository) {
-        this.cursoRepository = cursoRepository;
-    }
+    //Logger da classe
+    private static final Logger log = LoggerFactory.getLogger(CursoService.class);
     
     @Override
     public Curso save(Curso save) {
-
     // Verifica nome ou código vazios
     if (StringUtill.stringIsEmpty(save.getNome()) ||
     StringUtill.stringIsEmpty(save.getCodigoCurso())) {
@@ -48,7 +47,8 @@ public class CursoService implements CursoIService {
         }
     });
 
-    // Salva
+    // Salva no logger as mudanças
+    log.info("Foi Salvo o Objeto Curso");
     return cursoRepository.save(save);
 }
 
@@ -77,6 +77,9 @@ public class CursoService implements CursoIService {
             throw new RuntimeException("Já existe outro curso com esse código!");
         }
         });
+        
+        // Salva no logger as mudanças
+        log.info("Foi atualizado um objeto do curso");
         return cursoRepository.save(upd);
     }
 
@@ -86,6 +89,9 @@ public class CursoService implements CursoIService {
         if (!cursoRepository.findById(del.getId()).isPresent()) {
         throw new RuntimeException("Curso não encontrado para exclusão");
         }
+        
+        // Salva no logger as mudanças
+        log.info("um objeto do curso foi deletado");
         cursoRepository.deleteById(del.getId());
     }
 
